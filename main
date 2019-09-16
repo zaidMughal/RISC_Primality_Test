@@ -18,3 +18,12 @@
     bne t6,zero,ML
     #ret
     MULend:
+    
+ 	#-------------------Mod Function------------------------
+
+	Mod:			 #input a4,a5(a4 mod a5)			,output in a4,
+	L:blt a4,a5,P
+	sub a4,a4,a5
+    j L
+    P:
+    ret
