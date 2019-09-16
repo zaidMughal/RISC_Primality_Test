@@ -1,0 +1,20 @@
+ 	#-------------------Multiply Function------------------------
+    Mult:			#input a6,a7,			output a1,			uses t6
+    bge a6,a7,IF_a6_G
+    
+    IF_a7_G:
+    mv t6,a6
+    add a1,a1,zero
+    M:add a1,a1,a7
+    addi t6,t6,-1
+    bne t6,zero,M
+    #ret
+   j MULend
+    IF_a6_G:
+    mv t6,a7
+    add a1,a1,zero
+    ML:add a1,a1,a6
+    addi t6,t6,-1
+    bne t6,zero,ML
+    #ret
+    MULend:
