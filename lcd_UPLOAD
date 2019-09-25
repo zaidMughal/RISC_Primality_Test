@@ -1,5 +1,21 @@
 #.equ: aaa, 0x3
 .main:				#s11 is used for sending data to  lcd
+addi a0,x0,0x2
+jal ra,COMMAND
+addi t0,x0,2047			#wait
+jal ra, DELAY
+addi a0,x0,0x8
+jal ra,COMMAND
+addi t0,x0,2047			#wait
+jal ra, DELAY
+addi a0,x0,0x0
+jal ra,COMMAND
+addi a0,x0,0xE
+jal ra,COMMAND
+addi a0,x0,0x0
+jal ra,COMMAND
+addi a0,x0,0x6
+jal ra,COMMAND
 
 
 
