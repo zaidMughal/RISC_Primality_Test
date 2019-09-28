@@ -1,0 +1,97 @@
+addi a0,x0,0x2
+jal ra,COMMAND
+nop
+nop
+nop
+addi t0,x0,2047			#wait
+jal ra, DELAY
+nop
+nop
+nop
+addi a0,x0,0x8
+jal ra,COMMAND
+nop
+nop
+nop
+addi t0,x0,2047			#wait
+jal ra, DELAY
+nop
+nop
+nop
+addi a0,x0,0x0
+jal ra,COMMAND
+nop
+nop
+nop
+addi a0,x0,0xE
+jal ra,COMMAND
+nop
+nop
+nop
+addi a0,x0,0x0
+jal ra,COMMAND
+nop
+nop
+nop
+addi a0,x0,0x6
+jal ra,COMMAND
+nop
+nop
+nop
+
+
+
+
+j END
+#-------------------------COMMAND---------------
+COMMAND:	#Input command is in a0
+sw ra, 0(sp)
+addi sp,sp, -1
+
+add s11,x0,a0
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+addi t0,x0,4			#(4x2)+2 instructions>1us
+jal ra, DELAY
+ori s11,s11,0x10		#store command,En=1
+addi t0,x0,4			#(4x2)+2 instructions>1us
+jal ra, DELAY
+andi s11,s11,0xF		#store command,En=0
+addi t0,x0,1			#(1000x2)+2 instructions>40us
+jal ra, DELAY
+
+addi sp,sp, 1
+nop
+nop
+nop
+lw ra, 0(sp)
+nop
+nop
+nop
+jr ra
+nop
+nop
+nop
+
+#------------DELAY-----------
+DELAY:	#take input in t0
+#addi t0,x0,2047
+nop
+nop
+HERE1:
+addi t0,t0,-1
+nop
+nop
+nop
+bne t0,x0,HERE1
+nop
+nop
+nop
+jr ra
+nop
+nop
+nop
+#----------------------------
+END:
