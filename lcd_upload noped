@@ -43,6 +43,8 @@ nop
 
 
 j END
+nop
+nop
 #-------------------------COMMAND---------------
 COMMAND:	#Input command is in a0
 sw ra, 0(sp)
@@ -55,12 +57,21 @@ nop
 andi s11,s11,0xF		#store command,En=0
 addi t0,x0,4			#(4x2)+2 instructions>1us
 jal ra, DELAY
+nop
+nop
+nop
 ori s11,s11,0x10		#store command,En=1
 addi t0,x0,4			#(4x2)+2 instructions>1us
 jal ra, DELAY
+nop
+nop
+nop
 andi s11,s11,0xF		#store command,En=0
-addi t0,x0,1			#(1000x2)+2 instructions>40us
+addi t0,x0,1000			#(1000x2)+2 instructions>40us
 jal ra, DELAY
+nop
+nop
+nop
 
 addi sp,sp, 1
 nop
@@ -95,3 +106,4 @@ nop
 nop
 #----------------------------
 END:
+j END
