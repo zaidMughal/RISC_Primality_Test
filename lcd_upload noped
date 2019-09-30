@@ -1,44 +1,54 @@
-addi a0,x0,0x2
-jal ra,COMMAND
-nop
-nop
-nop
-addi t0,x0,2047			#wait
+lui t0,0x9			#wait
 jal ra, DELAY
 nop
 nop
 nop
-addi a0,x0,0x8
+addi a0,x0,0x28
 jal ra,COMMAND
 nop
 nop
 nop
-addi t0,x0,2047			#wait
+lui t0,0x9			#wait
 jal ra, DELAY
 nop
 nop
 nop
-addi a0,x0,0x0
+addi a0,x0,0x0F
 jal ra,COMMAND
 nop
 nop
 nop
-addi a0,x0,0xE
+addi a0,x0,0x01
 jal ra,COMMAND
 nop
 nop
 nop
-addi a0,x0,0x0
-jal ra,COMMAND
+lui t0,0x9			#wait
+jal ra, DELAY
 nop
 nop
 nop
-addi a0,x0,0x6
+addi a0,x0,0x06
 jal ra,COMMAND
 nop
 nop
 nop
 
+addi a0,x0,0x41
+jal ra,DATA
+nop
+nop
+nop
+addi a0,x0,0x42
+jal ra,DATA
+nop
+nop
+nop
+addi a0,x0,0x43
+jal ra,DATA
+nop
+nop
+nop
 
 
 
@@ -48,26 +58,49 @@ nop
 #-------------------------COMMAND---------------
 COMMAND:	#Input command is in a0
 sw ra, 0(sp)
+nop	#extremely important
 addi sp,sp, -1
 
-add s11,x0,a0
+srli s11,a0,4			#PART 1-----------
 nop
 nop
 nop
 andi s11,s11,0xF		#store command,En=0
-addi t0,x0,4			#(4x2)+2 instructions>1us
+addi t0,x0,1000			#(4x2)+2 instructions>1us
 jal ra, DELAY
 nop
 nop
 nop
 ori s11,s11,0x10		#store command,En=1
-addi t0,x0,4			#(4x2)+2 instructions>1us
+addi t0,x0,1000			#(4x2)+2 instructions>1us
 jal ra, DELAY
 nop
 nop
 nop
 andi s11,s11,0xF		#store command,En=0
-addi t0,x0,1000			#(1000x2)+2 instructions>40us
+addi t0,x0,1500			#(1000x2)+2 instructions>40us
+jal ra, DELAY
+nop
+nop
+nop
+add s11,x0,a0			#PART 2---------------
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+addi t0,x0,1000			#(4x2)+2 instructions>1us
+jal ra, DELAY
+nop
+nop
+nop
+ori s11,s11,0x10		#store command,En=1
+addi t0,x0,1000			#(4x2)+2 instructions>1us
+jal ra, DELAY
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+addi t0,x0,1500			#(1000x2)+2 instructions>40us
 jal ra, DELAY
 nop
 nop
@@ -105,5 +138,77 @@ nop
 nop
 nop
 #----------------------------
+
+#-------------------------DATA---------------
+DATA:	#Input command is in a0
+sw ra, 0(sp)
+nop	#extremely important
+addi sp,sp, -1
+
+srli s11,a0,4			#PART 1-----------
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+nop
+nop
+nop
+ori s11,s11,0x20		#Rs=1
+addi t0,x0,1000			#(4x2)+2 instructions>1us
+jal ra, DELAY
+nop
+nop
+nop
+ori s11,s11,0x10		#store command,En=1
+addi t0,x0,1000			#(4x2)+2 instructions>1us
+jal ra, DELAY
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+addi t0,x0,1500			#(1000x2)+2 instructions>40us
+jal ra, DELAY
+nop
+nop
+nop
+add s11,x0,a0			#PART 2---------------
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+nop
+nop
+nop
+ori s11,s11,0x20		#Rs=1
+addi t0,x0,1000			#(4x2)+2 instructions>1us
+jal ra, DELAY
+nop
+nop
+nop
+ori s11,s11,0x10		#store command,En=1
+addi t0,x0,1000			#(4x2)+2 instructions>1us
+jal ra, DELAY
+nop
+nop
+nop
+andi s11,s11,0xF		#store command,En=0
+addi t0,x0,1500			#(1000x2)+2 instructions>40us
+jal ra, DELAY
+nop
+nop
+nop
+
+addi sp,sp, 1
+nop
+nop
+nop
+lw ra, 0(sp)
+nop
+nop
+nop
+jr ra
+nop
+nop
+nop
 END:
 j END
