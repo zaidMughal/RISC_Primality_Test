@@ -1,65 +1,313 @@
+nop
+#IMPORTANT:
+#In this code, x21 is used as return address and x22 as stack pointer
+addi x22,x0,0x1F# initialize x22 as sp
+nop
+nop
+nop
 lui t0,0x9			#wait
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 addi a0,x0,0x28
-jal ra,COMMAND
+jal x21,COMMAND
 nop
 nop
 nop
 lui t0,0x9			#wait
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 addi a0,x0,0x0F
-jal ra,COMMAND
+jal x21,COMMAND
 nop
 nop
 nop
 addi a0,x0,0x01
-jal ra,COMMAND
+jal x21,COMMAND
 nop
 nop
 nop
 lui t0,0x9			#wait
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 addi a0,x0,0x06
-jal ra,COMMAND
+jal x21,COMMAND
 nop
 nop
 nop
-
 addi a0,x0,0x41
-jal ra,DATA
+jal x21,DATA
 nop
 nop
 nop
-addi a0,x0,0x42
-jal ra,DATA
+lui t0,0x300			#wait
+jal x21, DELAY
 nop
 nop
 nop
-addi a0,x0,0x43
-jal ra,DATA
-nop
-nop
-nop
+##Initialization END, Primality begin
 
-
-
+#x12 : n number to be tested
+li x12,0x456
+nop
+nop
+#jal x21,TEST
+addi x14,x0,0x1
+li t5,0x1#to compare
+nop
+nop
+nop
+beq x14,t5,DISPLAY
+nop
+nop
+nop
 j END
 nop
 nop
+#----------------------------DISPLAY-------------------
+DISPLAY:
+sw x21, 0(x22)
+nop	#extremely important
+addi x22,x22, -1
+
+li t5,0xA#use ahead
+addi a0,x0,0x01		#clear
+jal x21,COMMAND
+nop
+nop
+nop
+lui t0,0x9			#wait
+#addi t0,x0,1
+jal x21, DELAY
+nop
+nop
+nop
+addi a0,x0,0x80		#to begining of first line
+jal x21,COMMAND
+nop
+nop
+nop
+#transmission start
+srli a0,x12,0x1c####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num
+nop
+nop
+nop
+notnum:addi a0,a0,0x41
+j jh
+nop
+nop
+nop
+num:addi a0,a0,0x30
+jh:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0x18####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num2
+nop
+nop
+nop
+notnum2:addi a0,a0,0x41
+j jh2
+nop
+nop
+nop
+num2:addi a0,a0,0x30
+jh2:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0x14####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num3
+nop
+nop
+nop
+notnum3:addi a0,a0,0x41
+j jh3
+nop
+nop
+nop
+num3:addi a0,a0,0x30
+jh3:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0x10####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num4
+nop
+nop
+nop
+notnum4:addi a0,a0,0x41
+j jh4
+nop
+nop
+nop
+num4:addi a0,a0,0x30
+jh4:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0xc####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num5
+nop
+nop
+nop
+notnum5:addi a0,a0,0x41
+j jh5
+nop
+nop
+nop
+num5:addi a0,a0,0x30
+jh5:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0x8####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num6
+nop
+nop
+nop
+notnum6:addi a0,a0,0x41
+j jh6
+nop
+nop
+nop
+num6:addi a0,a0,0x30
+jh6:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0x4####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num7
+nop
+nop
+nop
+notnum7:addi a0,a0,0x41
+j jh7
+nop
+nop
+nop
+num7:addi a0,a0,0x30
+jh7:
+jal x21,DATA
+nop
+nop
+nop
+
+srli a0,x12,0x0####
+nop
+nop
+nop
+andi a0,a0,0xf#clear extra values
+nop
+nop
+nop
+blt a0,t5,num8
+nop
+nop
+nop
+notnum8:addi a0,a0,0x41
+j jh8
+nop
+nop
+nop
+num8:addi a0,a0,0x30
+jh8:
+jal x21,DATA
+nop
+nop
+nop
+#transmission end
+lui t0,0x60			#wait
+jal x21, DELAY
+nop
+nop
+nop
+addi x22,x22, 1
+nop
+nop
+nop
+lw x21, 0(x22)
+nop
+nop
+nop
+jr x21
+nop
+nop
+nop
+
 #-------------------------COMMAND---------------
 COMMAND:	#Input command is in a0
-sw ra, 0(sp)
+sw x21, 0(x22)
 nop	#extremely important
-addi sp,sp, -1
+addi x22,x22, -1
 
 srli s11,a0,4			#PART 1-----------
 nop
@@ -67,54 +315,50 @@ nop
 nop
 andi s11,s11,0xF		#store command,En=0
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 ori s11,s11,0x10		#store command,En=1
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 andi s11,s11,0xF		#store command,En=0
 addi t0,x0,1500			#(1000x2)+2 instructions>40us
-jal ra, DELAY
+jal x21, DELAY
 nop
+nop			#PART 2---------------
 nop
-nop
-add s11,x0,a0			#PART 2---------------
-nop
-nop
-nop
-andi s11,s11,0xF		#store command,En=0
+andi s11,a0,0xF		#store command,En=0
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 ori s11,s11,0x10		#store command,En=1
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 andi s11,s11,0xF		#store command,En=0
 addi t0,x0,1500			#(1000x2)+2 instructions>40us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 
-addi sp,sp, 1
+addi x22,x22, 1
 nop
 nop
 nop
-lw ra, 0(sp)
+lw x21, 0(x22)
 nop
 nop
 nop
-jr ra
+jr x21
 nop
 nop
 nop
@@ -133,7 +377,7 @@ bne t0,x0,HERE1
 nop
 nop
 nop
-jr ra
+jr x21
 nop
 nop
 nop
@@ -141,9 +385,9 @@ nop
 
 #-------------------------DATA---------------
 DATA:	#Input command is in a0
-sw ra, 0(sp)
+sw x21, 0(x22)
 nop	#extremely important
-addi sp,sp, -1
+addi x22,x22, -1
 
 srli s11,a0,4			#PART 1-----------
 nop
@@ -155,60 +399,58 @@ nop
 nop
 ori s11,s11,0x20		#Rs=1
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 ori s11,s11,0x10		#store command,En=1
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 andi s11,s11,0xF		#store command,En=0
 addi t0,x0,1500			#(1000x2)+2 instructions>40us
-jal ra, DELAY
+jal x21, DELAY
 nop
+nop						#PART 2---------------
 nop
-nop
-add s11,x0,a0			#PART 2---------------
-nop
-nop
-nop
-andi s11,s11,0xF		#store command,En=0
+andi s11,a0,0xF		#store command,En=0
 nop
 nop
 nop
 ori s11,s11,0x20		#Rs=1
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 ori s11,s11,0x10		#store command,En=1
 addi t0,x0,1000			#(4x2)+2 instructions>1us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 andi s11,s11,0xF		#store command,En=0
 addi t0,x0,1500			#(1000x2)+2 instructions>40us
-jal ra, DELAY
+jal x21, DELAY
 nop
 nop
 nop
 
-addi sp,sp, 1
+addi x22,x22, 1
 nop
 nop
 nop
-lw ra, 0(sp)
+lw x21, 0(x22)
 nop
 nop
 nop
-jr ra
+jr x21
 nop
 nop
 nop
+######-----------------TEST------------------
+TEST:
 END:
 j END
