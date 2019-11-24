@@ -452,5 +452,243 @@ nop
 nop
 ######-----------------TEST------------------
 TEST:
+
+#x12 : n number to be tested
+li x12,521
+nop
+#x13 : k is rounds to perform
+li x13,10
+
+#x11 : 1
+li x11,1
+
+#x9  : n – 1
+Addi x9,x12,-1
+
+
+#Writing n as (2^r)*d+1
+###################################################
+#x15 : r
+#x16 : d
+nop
+nop
+nop
+Mv x16,x9
+
+li x15,0 #counting consecutive zeros at left
+shiftloop:
+nop
+nop
+	srli x16,x16,1
+	addi x15,x15,1
+nop
+nop
+	and x31,x11,x16 #Mask
+nop
+nop
+nop
+	beq x31,x0,shiftloop
+
+###################################################
+
+nop
+nop
+nop
+witness_loop:
+
+beq x13,x0,out_prob_prime
+nop
+nop
+nop
+addi x13,x13,-1
+
+#Random number generation
+###################################################
+
+#x1 : Random number a
+mv x1,x12
+nop
+nop
+nop
+addi x1,x1,-7
+
+#Modular Exponentiation
+###################################################
+#x1 base
+#x2 exponent
+#x3 modulus
+#x4 Result
+
+Mv x2,x16
+Mv x3,x12
+
+addi x4,x0,1
+addi x5,x0,1 #mask
+nop
+nop
+nop
+outer:
+and x5,x5,x2
+nop
+nop
+nop
+beq x5,x0,skip_multiply
+mul x4,x4,x1
+nop
+nop
+nop
+loop1:
+sub x4,x4,x3
+nop
+nop
+nop
+bge x4,x3,loop1
+nop
+nop
+nop
+bge x4,x0,d1
+nop
+nop
+nop
+add x4,x4,x3
+d1:
+skip_multiply:
+mul x1,x1,x1
+nop
+nop
+nop
+loop2:
+sub x1,x1,x3
+nop
+nop
+nop
+bge x1,x3,loop2
+nop
+nop
+nop
+bge x1,x0,d2
+nop
+nop
+nop
+add x1,x1,x3
+d2:
+srli x2,x2,1
+addi x5,x0,1
+nop
+nop
+bne x2,x0,outer
+addi x6,x6,10
+
+###################################################
+
+nop
+nop
+nop
+Beq x4,x9,witness_loop
+nop
+nop
+nop
+Beq x4,x11,witness_loop
+nop
+nop
+nop
+
+Li x31,1
+
+squareloop:
+Mv x1,x4
+Li x2,2
+#Modular squaring
+###################################################
+#x1 base
+#x2 exponent
+#x3 modulus
+#x4 Result
+addi x4,x0,1
+addi x5,x0,1 #mask
+nop
+nop
+nop
+outer2:
+and x5,x5,x2
+nop
+nop
+nop
+beq x5,x0,skip_multiply2
+nop
+nop
+nop
+mul x4,x4,x1
+nop
+nop
+nop
+loop12:
+sub x4,x4,x3
+nop
+nop
+nop
+bge x4,x3,loop12
+nop
+nop
+nop
+bge x4,x0,d12
+nop
+nop
+nop
+add x4,x4,x3
+d12:
+skip_multiply2:
+mul x1,x1,x1
+nop
+nop
+nop
+loop22:
+sub x1,x1,x3
+nop
+nop
+nop
+bge x1,x3,loop22
+nop
+nop
+nop
+bge x1,x0,d22
+nop
+nop
+nop
+add x1,x1,x3
+d22:
+srli x2,x2,1
+addi x5,x0,1
+nop
+nop
+bne x2,x0,outer2
+nop
+nop
+nop
+addi x6,x6,10
+###################################################
+
+Beq x4,x9,witness_loop
+nop
+nop
+nop
+Addi x31,x31,1
+nop
+nop
+nop
+Blt x31,x15,squareloop
+nop
+nop
+nop
+Li x14,1
+out_prob_prime:
+nop
+nop
+nop
+addi x14,x14,1
+nop
+nop
+nop
+add s11,x0,x14
 END:
 j END
