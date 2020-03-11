@@ -1,29 +1,421 @@
- 	#-------------------Multiply Function------------------------
-    Mult:			#input a6,a7,			output a1,			uses t6
-    bge a6,a7,IF_a6_G
-    
-    IF_a7_G:
-    mv t6,a6
-    add a1,a1,zero
-    M:add a1,a1,a7
-    addi t6,t6,-1
-    bne t6,zero,M
-    #ret
-   j MULend
-    IF_a6_G:
-    mv t6,a7
-    add a1,a1,zero
-    ML:add a1,a1,a6
-    addi t6,t6,-1
-    bne t6,zero,ML
-    #ret
-    MULend:
-    
- 	#-------------------Mod Function------------------------
+.equ aaa, 1#0x0fffff
+.equ m_delay, 1000
+.equ mx_delay, 20000
+.main:				#s11 is used for sending data to  lcd
+addi x15,x0,0x3
+jal ra,COMMAND
+nop
+nop
+nop
+addi x15,x0,0x3
+jal ra,COMMAND
+nop
+nop
+nop
+addi x15,x0,0x3
+jal ra,COMMAND
+nop
+nop
+nop
+addi x15,x0,0x2
+jal ra,COMMAND
+nop
+nop
+nop
+addi x15,x0,0x2
+jal ra,COMMAND
+nop
+nop
+nop
+addi x15,x0,0x8
+jal ra,COMMAND
+nop
+nop
+nop
+li x16,0x0fffff			#wait
+jal ra, DELAY
+nop
+nop
+nop
+addi x15,x0,0x0
+jal ra,COMMAND
+nop
+nop
+nop
+addi x15,x0,0xC
+jal ra,COMMAND
+nop
+nop
+nop
+#addi x15,x0,0x0
+#jal ra,COMMAND
+#nop
+#nop
+#nop
+#addi x15,x0,0x6
+#jal ra,COMMAND
+#nop
+#nop
+#nop#---------------------------------------INITIALIZATION DONE----------------------------------------
 
-	Mod:			 #input a4,a5(a4 mod a5)			,output in a4,
-	L:blt a4,a5,P
-	sub a4,a4,a5
-    j L
-    P:
-    ret
+li x17,5#5 as start
+START_of_Series:
+addi x4,x17,0
+addi x11,x4,-2
+jal ra,MR
+nop
+nop
+nop
+addi x13,x13,-1
+nop
+nop
+nop
+beq x13,x0,COMPOSITE
+nop
+nop
+nop
+    addi x15,x0,0x0#lcd commands
+    jal ra,COMMAND
+    nop
+    nop
+    nop
+    addi x15,x0,0x1
+    jal ra,COMMAND
+    nop
+    nop
+    nop
+    li x16,0x0ffff			#wait
+    jal ra, DELAY
+    nop
+    nop
+    nop
+    addi x15,x0,0x0#lcd commands
+    jal ra,COMMAND
+    nop
+    nop
+    nop
+    addi x15,x0,0x2
+    jal ra,COMMAND
+    nop
+    nop
+    nop
+    li x16,0x0ffff			#wait
+    jal ra, DELAY
+    nop
+    nop
+    nop
+srli x18,x17,16
+jal x19,STRING#since string uses ra, we cannt use ra,so x19
+nop
+nop
+nop
+srli x18,x17,8
+jal x19,STRING#since string uses ra, we cannt use ra,so x19
+nop
+nop
+nop
+srli x18,x17,4
+jal x19,STRING#since string uses ra, we cannt use ra,so x19
+nop
+nop
+nop
+srli x18,x17,0
+jal x19,STRING#since string uses ra, we cannt use ra,so x19
+nop
+nop
+nop
+li x16,0x7fffff			#wait
+jal ra, DELAY
+nop
+nop
+nop
+
+COMPOSITE:
+addi x17,x17,1
+j START_of_Series
+nop
+nop
+nop
+
+#---------------------------------------END----------------------------
+
+
+#---------------------------MILLER RAVIN----------------------------------
+MR:
+#li x4,7 #INPUT: n number to be tested
+#li x11,5 #INPUT: random number in range [2,n-2]
+
+#OUTPUT provided in x13
+#	15 indicates probable prime
+#	1  indicates composite
+
+MR_test:
+li x7,1
+
+#x6 = m
+#x5 = R
+#x4 = n
+#x3 = d
+#x8 = r
+
+#write n as (2^r)*d + 1
+addi x4,x4,-1
+mv x3,x4
+
+li x8,0
+count:
+addi x8,x8,1
+srli x3,x3,1
+andi x10,x3,1
+nop
+nop
+nop
+beq x10,x0,count
+nop
+nop
+nop
+
+#witness_loop:
+addi x6,x4,1
+
+li x5,1
+start:
+	andi x10,x3,1
+    nop
+    nop
+    nop
+	beq x10,x0,skip1
+    nop
+    nop
+    nop
+	mul x5,x5,x11
+    
+    subtract1:
+    nop
+    nop
+    nop
+    blt x5,x6,skip1
+    nop
+    nop
+    nop
+    sub x5,x5,x6
+    j subtract1
+    nop
+    nop
+    nop
+    
+    skip1:
+    mul x11,x11,x11
+    subtract2:
+    nop
+    nop
+    nop
+    blt x11,x6,skip2
+    nop
+    nop
+    nop
+    sub x11,x11,x6
+    j subtract2
+    nop
+    nop
+    nop
+    
+    skip2:
+	srli x3,x3,1
+nop
+nop
+nop
+bne x3,x0,start
+nop
+nop
+nop
+
+beq x5,x7,witness
+nop
+nop
+nop
+beq x5,x4,witness
+nop
+nop
+nop
+
+beq x8,x10,skip4
+nop
+nop
+nop
+
+loop:
+addi x8,x8,-1
+mul x5,x5,x5
+    
+subtract3:
+nop
+nop
+nop
+blt x5,x6,skip3
+nop
+nop
+nop
+sub x5,x5,x6
+j subtract3
+nop
+nop
+nop
+    
+skip3:
+
+beq x5,x4,witness
+nop
+nop
+nop
+
+bne x10,x8,loop
+nop
+nop
+nop
+
+skip4:
+li x13,1
+jr ra
+nop
+nop
+nop
+
+witness:
+li x13,15
+jr ra
+nop
+nop
+nop
+
+
+
+
+
+
+
+
+
+#-------------------------COMMAND---------------
+COMMAND:	#Input command is in x15
+
+andi s11,x15,0xF		#store command,En=0
+addi x16,x0,m_delay			#(4x2)+2 instructions>1us
+HERE1:addi x16,x16,-1#delay
+    nop
+    nop
+    nop
+    bne x16,x0,HERE1
+    nop
+    nop
+    nop
+ori s11,s11,0x10		#store command,En=1
+addi x16,x0,m_delay			#(4x2)+2 instructions>1us
+HERE2:addi x16,x16,-1#delay
+    nop
+    nop
+    nop
+    bne x16,x0,HERE2
+    nop
+    nop
+    nop
+andi s11,s11,0xF		#store command,En=0
+li x16,20000			#(1000x2)+2 instructions>40us
+HERE3:addi x16,x16,-1#delay
+    nop
+    nop
+    nop
+    bne x16,x0,HERE3
+    nop
+    nop
+    nop
+jr ra
+nop
+nop
+nop
+
+#-------------------------DATA---------------
+DATA:	#Input command is in x15
+
+ori x15,x15,0x20
+andi s11,x15,0x2F		#store command,En=0
+addi x16,x0,m_delay			#(4x2)+2 instructions>1us
+HERE5:addi x16,x16,-1#delay
+    nop
+    nop
+    nop
+    bne x16,x0,HERE5
+    nop
+    nop
+    nop
+ori s11,s11,0x10		#store command,En=1
+addi x16,x0,m_delay			#(4x2)+2 instructions>1us
+HERE6:addi x16,x16,-1#delay
+    nop
+    nop
+    nop
+    bne x16,x0,HERE6
+    nop
+    nop
+    nop
+andi s11,s11,0x2F		#store command,En=0
+li x16,20000			#(1000x2)+2 instructions>40us
+HERE7:addi x16,x16,-1#delay
+    nop
+    nop
+    nop
+    bne x16,x0,HERE7
+    nop
+    nop
+    nop
+jr ra
+nop
+nop
+nop
+#-----------------------------STRING--------------------------
+STRING:#take input in x19
+addi x20,x0,0xA
+blt x18,x20,NUM
+nop
+nop
+nop
+bge x18,x20,STR
+nop
+nop
+nop
+NUM:
+addi x24,x18,'0'
+j g
+nop
+nop
+nop
+STR:
+addi x24,x18,56			#for A
+g: srli x15,x24,4		#send first nibble
+    jal ra DATA
+    nop
+    nop
+    nop
+    srli x15,x24,0
+    jal ra DATA
+    nop
+    nop
+    nop
+jr x19
+nop
+nop
+nop
+#------------DELAY-----------
+DELAY:	#take input in x16
+HERE4:
+addi x16,x16,-1#delay
+nop
+nop
+nop
+bne x16,x0,HERE4
+nop
+nop
+nop
+jr ra
+#----------------------------
+END:
