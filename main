@@ -373,8 +373,16 @@ nop
 nop
 nop
 #-----------------------------STRING--------------------------
-STRING:#take input in x19
+STRING:#take input in x18, must called and return not to ra
+andi x18,x18,0xf
 addi x20,x0,0xA
+nop
+nop
+nop
+beq x18,x0,end_string
+nop
+nop
+nop
 blt x18,x20,NUM
 nop
 nop
@@ -390,7 +398,7 @@ nop
 nop
 nop
 STR:
-addi x24,x18,56			#for A
+addi x24,x18,55			#for A
 g: srli x15,x24,4		#send first nibble
     jal ra DATA
     nop
@@ -401,7 +409,7 @@ g: srli x15,x24,4		#send first nibble
     nop
     nop
     nop
-jr x19
+end_string:jr x19
 nop
 nop
 nop
